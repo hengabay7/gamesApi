@@ -96,9 +96,54 @@ router.delete('/deleteGame/:gid', async(req,res) => {
     })   
 });
 
-router.put('/updateGame/:gid', async(req,res) => {});
+router.put('/updateGame/:gid', async(req,res) => {
+    const gid = req.params.gid;
+    const {genreId,gameName,gamePrice,gameDescription,gameImage,isAailable} = req.body;
+    
+    Game.findById(gid)
+    .then( game => {
 
-router.get('/readGameById/:gid',async(req,res) => {});
+        game.gamePrice = gamePrice;
+        game.isAailable = isAailable;
+        game.genreId = genreId;
+        game.gameDescription=gameDescription;
+        game.gameImage=gameImage;
+        game.gameName=gameName;
+
+        game.save()
+        .then(game_updated => {
+            return res.status(200).json({
+                message: game_updated
+            })
+        })
+        .catch(error => {
+            return res.status(500).json({
+                message: error.message
+            })
+        })
+    })
+    .catch( error => {
+        return res.status(500).json({
+            message: error.message
+        })
+    })
+});
+
+router.get('/readGameById/:gid',async(req,res) => {
+    const gid = req.params.gid;
+    Game.findById(gid)
+    .populate('genreId')
+    .then(game => {
+         return res.status(200).json({
+            message: game
+        })
+    })
+    .catch(error => {
+         return res.status(500).json({
+            message: error.message
+        })
+    })
+});
 
 router.get('/readGamesByGenre/:genId',async(req,res) => {
     const genId= req.params.genId;
