@@ -3,6 +3,7 @@ import './App.css';
 import { Button , Container , Row ,Col , Form, Card } from 'react-bootstrap';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Header from './components/Header';
 
 import GameItem from './components/GameItem';
 
@@ -86,9 +87,7 @@ function App() {
       <Container>
       <ToastContainer />
 
-        <Row>
-          <Col></Col>
-        </Row>
+        <Header />
 
         <Row style={{marginTop:100}}>
           <Col xl={3} xs={12}>
@@ -131,7 +130,7 @@ function App() {
               games.length > 0 ?              
                 games.map((item) => (
                 <Col xl={4} >
-                  <GameItem deleteGameClick={() => {deleteProductById(item._id)}} game={item} />
+                  <GameItem deleteGameClick={() => {deleteProductById(item._id)}} game={item} loadAllGames={loadAllGames} />
                 </Col>
                 ))                
                :               
