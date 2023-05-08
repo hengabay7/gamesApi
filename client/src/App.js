@@ -42,7 +42,7 @@ function App() {
 
 
   const addnewgame = async() => {
-    if(selectedGameName != "" && selectedGamePrice != "" && selectedGenre !== ""){
+    if(selectedGameName !== "" && selectedGamePrice !== "" && selectedGenre !== ""){
 
       const response = await fetch(baseUrl + "/createGame", {
         method: 'POST', 
