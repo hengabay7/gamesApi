@@ -41,6 +41,20 @@ function App() {
   },[]);
 
 
+  const deleteProductById = async(gid) => {
+    try{
+    const response = await fetch(baseUrl + "/deleteGame/" + gid,{
+      method: 'DELETE'
+    });
+    const data = await response.json();
+    toast.success(data.message)
+    loadAllGames();
+   } catch (error) {
+      toast.error(error.message)
+    }
+  }
+
+
   const addnewgame = async() => {
     if(selectedGameName !== "" && selectedGamePrice !== "" && selectedGenre !== ""){
 
@@ -117,7 +131,7 @@ function App() {
               games.length > 0 ?              
                 games.map((item) => (
                 <Col xl={4} >
-                  <GameItem game={item} />
+                  <GameItem deleteGameClick={() => {deleteProductById(item._id)}} game={item} />
                 </Col>
                 ))                
                :               
