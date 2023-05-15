@@ -4,6 +4,7 @@ dotenv.config();
 import mongoose from 'mongoose';
 import action from './action.js';
 import cors from 'cors';
+import accountController from './constrollers/account.js';
 
 
 const app =express();
@@ -13,7 +14,9 @@ app.use(express.urlencoded({extended: false}));
 app.use(express.json());
 
 const port = process.env.PORT;
-app.use('/api',action);
+
+app.use('/api', action);
+app.use('/api/account', accountController);
 
 
 mongoose.connect(process.env.MOBGO_URL)

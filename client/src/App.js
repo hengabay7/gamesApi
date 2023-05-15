@@ -4,8 +4,8 @@ import { Button , Container , Row ,Col , Form, Card } from 'react-bootstrap';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Header from './components/Header';
-
 import GameItem from './components/GameItem';
+import axios from 'axios';
 
 function App() {
 
@@ -18,6 +18,14 @@ function App() {
   const [selectedGamePrice , setSelectedGamePrice] = useState ("");
   const [selectedDescription , setSelectedDescription] = useState ("");
   const [selectedGameImage, setSelectedGameImage] = useState ("");
+  
+
+  const [firstName, setFirstName] = useState ("");
+  const [lastName, setLastName] = useState ("");
+  const [email, setEmail] = useState ("");
+  const [password, setPassword] = useState ("");
+  const [mobile, setMobile] = useState ("");
+
 
   const loadAllGames = async() => {
     const response =await fetch(baseUrl + "/readAllGames",{
@@ -82,6 +90,51 @@ function App() {
   }
 
 
+const creacteNewAccount = async() => {
+
+  if(firstName !== "" && lastName !== "" && password !== ""){
+    const user = {
+      firstName: firstName,
+      lastName: lastName,
+      email:email,
+      password: password,
+      mobile: mobile
+    }
+
+    axios.post(baseUrl + '/account/createAccount', {user})
+    .then(results => {
+    toast.success(results.data.message.email);
+    })
+    .catch(error => {
+      toast.error(error.response.data.message);
+    })
+
+  } else {
+    toast.error("All input are required!!!");
+  }
+}
+  
+
+const login = async() => {
+  if(email !=="" && password !==""){
+    const user = {    
+      email:email,
+      password: password,  
+    }
+
+    axios.post(baseUrl + '/account/login', {user})
+    .then(results => {
+    toast.success(results.data.message);
+    })
+    .catch(error => {
+      toast.error(error.response.data.message);
+    })
+
+  } else {
+    toast.error("All input are required!!!");
+  }
+}
+
   return (
     <div className="App">
       <Container>
@@ -92,7 +145,38 @@ function App() {
         <Row style={{marginTop:100}}>
           <Col xl={3} xs={12}>
 
-            <Form>
+          <Form>
+          <Form.Control type="text" value={firstName}
+             onChange={(e) => {setFirstName(e.target.value)}}
+             placeholder="First Name" style={{marginTop:10}} /> 
+
+            <Form.Control type="text" value={lastName}
+             onChange={(e) => {setLastName(e.target.value)}}
+             placeholder="Last name" style={{marginTop:10}} /> 
+
+             <Form.Control type="email" value={email}
+             onChange={(e) => {setEmail(e.target.value)}}
+             placeholder=" email " style={{marginTop:10}} /> 
+
+             <Form.Control type="password" value={password}
+             onChange={(e) => {setPassword(e.target.value)}}
+             placeholder="Password" style={{marginTop:10}} /> 
+
+             <Form.Control type="phone" value={mobile}
+             onChange={(e) => {setMobile(e.target.value)}}
+             placeholder="Mobile" style={{marginTop:10}} /> 
+
+            <Button variant='info' 
+            onClick={creacteNewAccount}
+            style={{marginTop:10, width:'100%'}}> Sing Up</Button> 
+
+            <Button variant='warning' 
+            onClick={login}
+            style={{marginTop:10, width:'100%'}}> login</Button>
+          </Form>
+          
+
+            {/* <Form>
             <Form.Select onChange={(e) => {setSelectedGenrs(e.target.value)}} >
               <option>Open this select menu</option>
               {
@@ -121,7 +205,7 @@ function App() {
 
 
               <Button variant='info' onClick={addnewgame} style={{marginTop:10, width:'100%'}}> Add New Game</Button>
-            </Form>
+            </Form> */}
 
           </Col>
           <Col xl={9} xs={12}>

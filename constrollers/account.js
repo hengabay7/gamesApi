@@ -23,7 +23,7 @@ router.post('/createAccount', async(req,res) => {
                 lastName: user.lastName,
                 email: user.email,
                 password: hash,
-                verficationCode: 1234,
+                verficationCode: generateRandomIntegerInRange(1000,9999),
                 mobile: user.mobile  
             })
             _account.save()
@@ -48,7 +48,47 @@ router.post('/createAccount', async(req,res) => {
 
 router.post('/login', async(req,res) => {
 
+    const user = req.body.user;
+    Account.findOne({email: user.email})
+    .then(async account => {
+        if(account){
+
+           const isMatch = await bcryptjs.compare(user.password, account.password); 
+            if(isMatch && account.isVarified){
+                const dataTotoken = {
+                    _id: account._id,
+                    firstName: account.firstName,
+                    lastName:account.lastName,
+                    email: account.email
+                }
+                const token =await Jwt.sign({dataTotoken}, process.env.JWT_KEY);
+                return res.status(200).json({
+                    message: token
+                })
+
+            } else {
+                return res.status(401).json({
+                    message: 'Password not match or account not verified yet'
+                })
+            }
+        } else {
+            return res.status(401).json({
+                message: 'Account not exist'
+            })
+        }
+    })
+    .catch(error => {
+        return res.status(500).json({
+            message: error.message
+        })
+    })   
 })
+
+
+
+function generateRandomIntegerInRange(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
 
 
 
